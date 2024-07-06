@@ -1,10 +1,22 @@
 import { Router, Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import { sign } from "jsonwebtoken";
+import { z, ZodError } from "zod";
 const router = Router();
 const prisma = new PrismaClient();
 
+export const signinInput = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
 router.post("/signin", async (req: Request, res: Response) => {
+  const body = req.body;
+  const { success } = signinInput.safeParse(body);
+  if (!success) {
+    return res.status(400).json({ error: "invalid input" });
+  }
+
   const { email, password } = req.body;
 
   try {
