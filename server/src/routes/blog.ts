@@ -14,8 +14,34 @@ export const updatePostInput = z.object({
   title: z.string().optional(),
   content: z.string().optional(),
 });
+// to get all the blogs
+router.get("/bulk", async (req: Request, res: Response) => {
+  console.log("this was called");
+  try {
+    const posts = await prisma.post.findMany(); // Fetch all posts
+    console.log(posts);
+    return res.json(posts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return res.status(500).json({ error });
+  }
+});
 
+//to get author name
+router.get("/author_name/:id", async (req: Request, res: Response) => {
+  const id = req.params.id;
+  console.log(id);
+  try {
+    const author = await prisma.user.findFirst({ where: { id: id } });
+    res.status(200).json({ name: author?.name });
+  } catch (e) {
+    res.status(400).json({ error: e });
+  }
+});
+
+//to get a specific blog
 router.get("/:id", async (req: Request, res: Response) => {
+  console.log("specific");
   const id = req.params.id;
 
   try {
@@ -36,7 +62,10 @@ router.get("/:id", async (req: Request, res: Response) => {
   }
 });
 
+//to post a blog
 router.post("/", async (req: Request, res: Response) => {
+  console.log("this was called post");
+
   const userId = req.userId;
   if (!userId) {
     return res.status(400).json({ error: "Invalid user" });
@@ -64,7 +93,10 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// to update a blog
 router.put("/", async (req: Request, res: Response) => {
+  console.log("this was called put");
+
   const userId = req.userId; // Assuming userId is in headers
   const { id, title, content } = req.body;
 
@@ -95,17 +127,7 @@ router.put("/", async (req: Request, res: Response) => {
   }
 });
 
-router.get("/", async (req: Request, res: Response) => {
-  try {
-    const posts = await prisma.post.findMany(); // Fetch all posts
-    console.log(posts);
-    return res.json(posts);
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    return res.status(500).json({ error });
-  }
-});
-
+// to delete a blog
 router.get("/delete", async (req: Request, res: Response) => {
   const { id } = req.body;
   const userId = req.userId;

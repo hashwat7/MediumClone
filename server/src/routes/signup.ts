@@ -15,10 +15,11 @@ const signupInput = z.object({
 router.post("/", async (req: Request, res: Response) => {
   const body = req.body;
   const { success } = signupInput.safeParse(body);
+
   if (!success) {
     return res.status(400).json({ error: "invalid input" });
   }
-  
+
   const { email, name, password } = req.body;
   try {
     const user = await prisma.user.create({

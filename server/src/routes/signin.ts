@@ -10,9 +10,10 @@ export const signinInput = z.object({
   password: z.string(),
 });
 
-router.post("/signin", async (req: Request, res: Response) => {
+router.post("/", async (req: Request, res: Response) => {
   const body = req.body;
   const { success } = signinInput.safeParse(body);
+
   if (!success) {
     return res.status(400).json({ error: "invalid input" });
   }
@@ -23,14 +24,15 @@ router.post("/signin", async (req: Request, res: Response) => {
     const user = await prisma.user.findUnique({
       where: {
         email: email,
-        password: password,
       },
     });
 
     if (!user) {
       return res.status(403).json({ error: "User not found" });
     }
-
+    if (user.password != password) {
+      return res.status(403).json({ error: "Invalid username/password" });
+    }
     const jwtSecret = process.env.JWT_SECRET;
     if (!jwtSecret) {
       throw new Error("JWT_SECRET is not defined in environment variables");
