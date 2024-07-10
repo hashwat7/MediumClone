@@ -34,7 +34,6 @@ export const Auth = ({ type }: { type: "signup" | "signin" }) => {
   }
 
   async function sendRequestSignin() {
-    console.log(BackEndURL);
     try {
       const response = await axios.post(`${url}`, {
         email: postInputs.username,

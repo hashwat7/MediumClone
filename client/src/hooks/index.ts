@@ -9,28 +9,28 @@ export interface Blog {
   author: string;
 }
 
-// export const useBlog = ({ id }: { id: string }) => {
-//   const [loading, setLoading] = useState(true);
-//   const [blog, setBlog] = useState<Blog>();
+export const useBlog = ({ id }: { id: string }) => {
+  const [loading, setLoading] = useState(true);
+  const [blog, setBlog] = useState<Blog>();
 
-//   useEffect(() => {
-//     axios
-//       .get(`${BackEndURL}/api/v1/blog/${id}`, {
-//         headers: {
-//           Authorization: localStorage.getItem("token"),
-//         },
-//       })
-//       .then((response) => {
-//         setBlog(response.data.blog);
-//         setLoading(false);
-//       });
-//   }, [id]);
+  useEffect(() => {
+    axios
+      .get(`${BackEndURL}/api/v1/blog/${id}`, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      })
+      .then((response) => {
+        setBlog(response.data.post);
+        setLoading(false);
+      });
+  }, [id]);
 
-//   return {
-//     loading,
-//     blog,
-//   };
-// };
+  return {
+    loading,
+    blog,
+  };
+};
 export const useBlogs = () => {
   const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -58,18 +58,36 @@ export const useBlogs = () => {
   };
 };
 
-export const useGetAuthor = (id: number) => {
-  console.log(id);
-  const url = `${BackEndURL}/api/v1/blog/author_name/${id}`;
-  const [author, setAuthor] = useState("");
+export const useGetUserName = () => {
+  const [user, setUser] = useState("Anonymous");
+  const url = `${BackEndURL}/api/v1/blog/userName`;
+
   useEffect(() => {
     const fetchdata = async () => {
-      const response = await axios.get(url, {
+      const res = await axios.get(url, {
         headers: {
           Authorization: localStorage.getItem("token"),
         },
       });
-      console.log(response);
+      setUser(res.data);
+    };
+    fetchdata();
+  }, []);
+
+  return user;
+};
+
+export const useGetAuthor = (id: number) => {
+  const url = `${BackEndURL}/api/v1/blog/author_name/${id}`;
+  const [author, setAuthor] = useState("");
+  useEffect(() => {
+    const fetchdata = async () => {
+      const res = await axios.get(url, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+        },
+      });
+      setAuthor(res.data.name);
     };
     fetchdata();
   }, []);

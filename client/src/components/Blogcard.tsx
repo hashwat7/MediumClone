@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useGetAuthor } from "../hooks";
+
 interface BlogCardProps {
   authorName: string;
   title: string;
@@ -10,14 +11,14 @@ interface BlogCardProps {
 
 export const BlogCard = ({
   id,
-  authorName,
+
   title,
   content,
   publishedDate,
 }: BlogCardProps) => {
-  console.log("id is " + id);
   const author = useGetAuthor(id);
-  console.log("blog card me author is" + author);
+
+  const authorName = author;
   return (
     <Link to={`/blog/${id}`}>
       <div className="p-4 border-b border-slate-200 pb-4 w-screen max-w-screen-md cursor-pointer">

@@ -1,8 +1,9 @@
-import { Blog } from "../hooks";
+import { Blog, useGetAuthor } from "../hooks";
 import { Appbar } from "./Appbar";
 import { Avatar } from "./Blogcard";
 
 export const FullBlog = ({ blog }: { blog: Blog }) => {
+  const author = useGetAuthor(blog.id);
   return (
     <div>
       <Appbar />
@@ -17,12 +18,10 @@ export const FullBlog = ({ blog }: { blog: Blog }) => {
             <div className="text-slate-600 text-lg">Author</div>
             <div className="flex w-full">
               <div className="pr-4 flex flex-col justify-center">
-                <Avatar size="big" name={blog.author || "Anonymous"} />
+                <Avatar size="big" name={author} />
               </div>
               <div>
-                <div className="text-xl font-bold">
-                  {blog.author || "Anonymous"}
-                </div>
+                <div className="text-xl font-bold">{author}</div>
                 <div className="pt-2 text-slate-500">
                   Random catch phrase about the author's ability to grab the
                   user's attention
