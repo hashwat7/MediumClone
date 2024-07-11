@@ -32,24 +32,26 @@ export const useBlog = ({ id }: { id: string }) => {
   };
 };
 export const useBlogs = () => {
-  const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState<Blog[]>([]);
-  const url = `${BackEndURL}/api/v1/blog/bulk`;
+  const [loading, setLoading] = useState<boolean>(true);
 
+  const url = `${BackEndURL}/api/v1/blog/bulk`;
   useEffect(() => {
-    const fetchdata = async () => {
-      axios
-        .get(url, {
+    const fetchBlogs = async () => {
+      try {
+        const response = await axios.get<Blog[]>(url, {
           headers: {
-            Authorization: localStorage.getItem("token"),
+            Authorization: localStorage.getItem("token") || "",
           },
-        })
-        .then((response) => {
-          setBlogs(response.data);
-          setLoading(false);
         });
+        setBlogs(response.data);
+      } catch (error) {
+        console.error("Error fetching blogs:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetchdata();
+    fetchBlogs();
   }, []);
 
   return {
@@ -59,7 +61,7 @@ export const useBlogs = () => {
 };
 
 export const useGetUserName = () => {
-  const [user, setUser] = useState("Anonymous");
+  const [user, setUser] = useState("");
   const url = `${BackEndURL}/api/v1/blog/userName`;
 
   useEffect(() => {

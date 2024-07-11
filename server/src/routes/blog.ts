@@ -170,4 +170,42 @@ router.get("/delete", async (req: Request, res: Response) => {
   }
 });
 
+//search a blog
+// app.get('/search', async (req, res) => {
+//   const { keyword } = req.query;
+
+//   if (!keyword) {
+//     return res.status(400).json({ error: 'Keyword is required' });
+//   }
+
+//   try {
+//     const posts = await prisma.post.findMany({
+//       where: {
+//         OR: [
+//           {
+//             title: {
+//               contains: keyword as string,
+//               mode: 'insensitive', // Case insensitive search
+//             },
+//           },
+//           {
+//             content: {
+//               contains: keyword as string,
+//               mode: 'insensitive',
+//             },
+//           },
+//         ],
+//       },
+//       include: {
+//         author: true, // Include the author details
+//       },
+//     });
+
+//     res.json(posts);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'An error occurred while searching for blogs' });
+//   }
+// });
+
 export default router;
